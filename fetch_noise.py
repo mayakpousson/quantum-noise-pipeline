@@ -1,36 +1,38 @@
 import pandas as pd
 from qiskit_ibm_runtime.fake_provider import FakeManilaV2
+import sqlite3
+from datetime import datetime
 
 print("Connecting to fake quantum computer backend...")
-# Initialize a mock 5-qubit quantum computer backend (IBM Manila)
 backend = FakeManilaV2()
 properties = backend.target
 
-# Create an empty list to store our rows of data
+# Capture the exact date and time of this reading
+current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
 quantum_data = []
 
-# Loop through all 5 qubits (numbered 0 to 4) to extract noise metrics
 for i in range(5):
     qubit_props = properties.qubit_properties[i]
     
-    # Convert raw times (seconds) to microseconds (us) for standard industry readability
-    # T1 (Relaxation Time): How long a qubit stays in the |1> state before decaying to |0>
-    # T2 (Decoherence Time): How long a qubit maintains its quantum superposition phase
     t1_microseconds = qubit_props.t1 * 1e6
     t2_microseconds = qubit_props.t2 * 1e6
     
-    # Structure the hardware data into a clean key-value dictionary
     qubit_dict = {
+        "timestamp": current_time, 
         "qubit_id": i,
         "t1_relaxation_us": round(t1_microseconds, 2),
         "t2_decoherence_us": round(t2_microseconds, 2)
     }
-    
-    # Append the dictionary to our main data list
     quantum_data.append(qubit_dict)
 
-# Convert the list of dictionaries into a structured Pandas DataFrame
 df = pd.DataFrame(quantum_data)
 
-print("\n--- Cleaned Quantum Hardware Data ---")
-print(df)
+print("Connecting to local SQLite database...")
+conn = sqlite3.connect("quantum_noise.db")
+
+# Save to the 'qubit_metrics' table
+df.to_sql("qubit_metrics", conn, if_exists="append", index=False)
+conn.close()
+
+print("Success! Data successfully saved to local SQL database (quantum_noise.db).")
