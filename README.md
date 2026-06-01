@@ -1,34 +1,34 @@
-# Quantum Noise Analytics Pipeline
+# Quantum Hardware Telemetry and Noise Analytics Platform
 
-An end-to-end data engineering and analysis pipeline designed to track, store, and query environmental noise metrics from quantum hardware. 
+An end-to-end data engineering and interactive visualization platform designed to track, log, and query live environmental noise metrics from quantum hardware.
 
-As a **Physics Major**, I built this project to simulate how real-world environmental interference impacts quantum computing systems. The pipeline tracks qubit degradation metrics over time, logs snapshots to a structured database, and uses data analytics techniques to identify unstable hardware components.
-
----
-
-## The Physics Context
-
-Quantum computers are highly sensitive to their environments. Thermal fluctuations, cosmic rays, and magnetic fields cause **quantum decoherence**, introducing severe errors into quantum calculations. This pipeline monitors two core hardware metrics:
-*   **$T_1$ Relaxation Time (Microseconds):** The lifespan of a qubit. It measures how long a qubit can remain in the high-energy state $|1\rangle$ before decaying back down to the ground state $|0\rangle$.
-*   **$T_2$ Decoherence Time (Microseconds):** The phase memory of a qubit. It measures how long a qubit can maintain its quantum superposition phase before losing its quantum properties entirely.
+As a Physics Major, I built this project to bridge the gap between quantum mechanics and modern data engineering. The platform acts as a real-time control room monitor, tracking physical qubit degradation metrics over time, logging automated snapshots to a structured time-series database, and serving an analytical dashboard for hardware health visualization.
 
 ---
 
-## Architecture & Tech Stack
+## Technical and Physical Context
 
-This project is built using professional software engineering and data analysis standards:
+Quantum processors are highly sensitive to environmental interference. Thermal fluctuations, cosmic rays, and electromagnetic waves cause quantum decoherence, introducing calculation errors. This platform monitors two critical hardware physics metrics:
+*   **T1 Relaxation Time (Microseconds):** The energy lifespan of a qubit. It measures how long a qubit remains in the high-energy state |1> before decaying back to the ground state |0>.
+*   **T2 Decoherence Time (Microseconds):** The phase memory of a qubit. It measures how long a qubit can maintain its quantum superposition phase before losing its quantum properties entirely.
+
+---
+
+## Architecture and Tech Stack
+
+This project is engineered using modern data pipelines and enterprise development tools:
 *   **Language:** Python 3.14
-*   **Quantum SDK:** Qiskit (Accessing simulated IBM Quantum system configurations)
-*   **Package Management:** `uv` & isolated virtual environments (`venv`)
-*   **Data Manipulation:** Pandas (Structuring nested JSON hardware configurations into dataframes)
-*   **Storage Layer:** SQLite (A local relational SQL database tracking historical hardware snapshots)
-*   **Query Engine:** Raw SQL (Filtering and isolating faulty hardware components)
-*   **Version Control:** Git & GitHub
+*   **Quantum SDK:** Qiskit (Accessing physical device telemetry metadata targets)
+*   **Package Management:** uv by Astral (Fast package resolution using isolated virtual environments)
+*   **Data Orchestration:** Pandas (Parsing nested telemetry schemas into structured dataframes)
+*   **Storage Tier:** SQLite (Time-series data logging using sequential relational tables)
+*   **Visualization Engine:** Streamlit and Plotly Express (High-fidelity custom dark-mode interface)
+*   **Version Control:** Git and GitHub
 
 ---
 
-## How It Works
+## Platform Component Breakdown
 
-1. **Extraction (`fetch_noise.py`):** Connects to the hardware target, fetches nested device properties, and calculates $T_1$ and $T_2$ times in microseconds.
-2. **Database Logging:** Appends a precise, localized `timestamp` to the reading and saves it directly to a local SQL database table named `qubit_metrics`.
-3. **Targeted Analytics (`query_data.py`):** Runs pure SQL queries to instantly filter out and isolate qubits currently experiencing a dangerous drop in phase stability ($T_2 < 50 \mu s$).
+1. **Automated Telemetry Loop (stream_data.py):** An automated background service that polls the hardware API metrics at scheduled intervals, captures physical environmental noise drifts, and appends live data points into the local database without human intervention.
+2. **Relational Database (quantum_noise.db):** An isolated SQLite datastore utilizing an APPEND structural model to construct a clean historical timeline of hardware states, complete with precise data timestamps.
+3. **Analytical Filter (query_data.py):** Runs raw SQL queries directly against the data tables to filter and isolate specific hardware components showing unstable phase margins (T2 < 50 us).
